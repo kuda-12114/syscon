@@ -12,13 +12,16 @@ def main():
   all = pygame.sprite.RenderUpdates()
   Tech.containers = all
   teccount = 0
+  red = 0
+  blue = 0
+  green = 0
   Tech.image = pygame.image.load("data/tech.png").convert_alpha()
   
   clock = pygame.time.Clock()
   while True:
     clock.tick(60)
     sysfont = pygame.font.SysFont(None, 80)
-    count = sysfont.render(str(teccount), False, (255, 0, 0))
+    count = sysfont.render(str(teccount), False, (red, blue, green))
     screen.fill((255, 255, 255))
     all.update()
     all.draw(screen)
@@ -35,6 +38,9 @@ def main():
         if event.key == K_SPACE:
           Tech((random.uniform(0,640), 0))
           teccount+=1
+          red = random.randint(0,255)
+          blue = random.randint(0,255)
+          green = random.randint(0,255)
 
 class Tech(pygame.sprite.Sprite):
   speed = -5
