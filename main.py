@@ -3,7 +3,6 @@ from pygame.locals import *
 import os
 import sys
 import random
-import cv2
 
 SCR_RECT = Rect(0, 0, 640, 480)
 
@@ -12,18 +11,18 @@ def main():
   screen = pygame.display.set_mode(SCR_RECT.size)
   all = pygame.sprite.RenderUpdates()
   Tech.containers = all
-  Tech.image = load_image("tech.png", 1)
-
-  cap = cv2.VideoCapture(0)
-  cascade = cv2.CascadeClassifier("haarcascade_frontalface_alt.xml")
-  #cascade = cv2.CascadeClassifier("lbpcascade_animeface.xml")
+  teccount = 0
+  Tech.image = pygame.image.load("data/tech.png").convert_alpha()
   
   clock = pygame.time.Clock()
   while True:
     clock.tick(60)
+    sysfont = pygame.font.SysFont(None, 80)
+    count = sysfont.render(str(teccount), False, (255, 0, 0))
     screen.fill((255, 255, 255))
     all.update()
     all.draw(screen)
+    screen.blit(count, (320,20))
     pygame.display.update()
     for event in pygame.event.get():
       if event.type == QUIT:
@@ -35,11 +34,7 @@ def main():
           sys.exit()
         if event.key == K_SPACE:
           Tech((random.uniform(0,640), 0))
-    ret, im = cap.read()
-    face=cascade.detectMultiScale(im, 1.1, 3)
-    for (x, y, w, h) in face:
-      cv2.rectangle(im, (x, y),(x + w, y + h),(0, 50, 255), 3)
-    cv2.imshow("Camera Test", im)
+          teccount+=1
 
 class Tech(pygame.sprite.Sprite):
   speed = -5
@@ -51,6 +46,7 @@ class Tech(pygame.sprite.Sprite):
     self.rect.move_ip(0, -self.speed)
     if self.rect.bottom < 0:
       self.kill()
+
 
 def load_image(filename, colorkey=None):
     filename = os.path.join("data", filename)
